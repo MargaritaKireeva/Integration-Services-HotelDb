@@ -1,0 +1,3042 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/27/2024 12:04:19 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="MARGARITA-K"
+  DTS:CreatorName="MARGARITA-K\ritak"
+  DTS:DTSID="{6085ACC9-AE2C-4865-9355-3E96DDD46CC8}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5685.0"
+  DTS:LocaleID="1049"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:VersionBuild="12"
+  DTS:VersionGUID="{A442C348-3A84-46EB-B170-CF6F4BD78A18}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[MARGARITA-K.HotelDb]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{90E97D6A-1BE6-4CE5-AB58-AA526B6BECF0}"
+      DTS:ObjectName="MARGARITA-K.HotelDb">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=MARGARITA-K;User ID=;Initial Catalog=HotelDb;Provider=MSOLEDBSQL.1;Persist Security Info=False;Integrated Security=SSPI;Initial File Name=;Server SPN=;Authentication=;Access Token=;Application Name=SSIS-Package1-{90E97D6A-1BE6-4CE5-AB58-AA526B6BECF0}MARGARITA-K.HotelDb;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[MARGARITA-K.HotelSystem]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{B965B361-E398-4E87-9482-66A835412F4E}"
+      DTS:ObjectName="MARGARITA-K.HotelSystem">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=MARGARITA-K;Initial Catalog=HotelSystem;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-Package1-{B965B361-E398-4E87-9482-66A835412F4E}MARGARITA-K.HotelSystem;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Задача потока данных"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Задача потока данных"
+      DTS:DTSID="{F9C3AEFF-4668-4399-9EE8-E3099808A9CC}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Задача потока данных"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Задача потока данных\AccommodationInfo"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Источник &quot;OLE DB&quot;;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;7"
+              description="Источник &quot;OLE DB&quot;"
+              name="AccommodationInfo"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Время ожидания команды, в секундах. Величина 0 означает неограниченное время ожидания."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Указывает имя объекта базы данных, используемого для открытия набора строк."
+                  name="OpenRowset">[dbo].[AccommodationInfo]</property>
+                <property
+                  dataType="System.String"
+                  description="Указывает переменную, содержащую имя объекта базы данных, используемого для открытия набора строк."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Команда SQL для выполнения."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT 
+    a.ID AS AccommodationID,
+    a.ClientID,
+    rt.TypeName, 
+    CAST(CONVERT(VARCHAR(8), a.ArrivalDate, 112) AS BIGINT) AS ArrivalDateBigint,
+    CAST(CONVERT(VARCHAR(8), a.DepartureDate, 112) AS BIGINT) AS DepartureDateBigint,
+    CASE 
+        WHEN a.BookingID IS NULL THEN CAST(0 AS BIT)  
+        ELSE CAST(1 AS BIT)                         
+    END AS IsBooking
+FROM 
+    AccommodationInfo a
+JOIN 
+    Room r ON a.RoomID = r.ID
+JOIN 
+    RoomType rt ON r.TypeID = rt.ID;</property>
+                <property
+                  dataType="System.String"
+                  description="Переменная, содержащая команду SQL для выполнения."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает кодовую страницу столбца, используемую, когда недоступны сведения о кодовой странице из источника данных."
+                  name="DefaultCodePage">1251</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Вызывает безусловное использование значение свойства DefaultCodePage при описании символьных данных."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает используемый режим доступа к базе данных."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="Сопоставления между параметрами в команде SQL и переменными."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Задача потока данных\AccommodationInfo.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[MARGARITA-K.HotelSystem]"
+                  connectionManagerRefId="Package.ConnectionManagers[MARGARITA-K.HotelSystem]"
+                  description="Соединение OLE DB среды выполнения, используемое для доступа к базе данных."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;]"
+                  name="Выход источника &quot;OLE DB&quot;">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[ClientKey]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[ClientID]"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[ClientKey]"
+                      name="ClientKey"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[AccommodationKey]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[AccommodationID]"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[AccommodationKey]"
+                      name="AccommodationKey"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[IsBooking]"
+                      dataType="bool"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[IsBooking]"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[IsBooking]"
+                      name="IsBooking"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[TypeName]"
+                      codePage="1251"
+                      dataType="str"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[TypeName]"
+                      length="255"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[TypeName]"
+                      name="TypeName"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[ArrivalDateKey]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[ArrivalDateBigint]"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[ArrivalDateKey]"
+                      name="ArrivalDateKey"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[DepartureDateKey]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[DepartureDateBigint]"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[DepartureDateKey]"
+                      name="DepartureDateKey"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[ClientID]"
+                      dataType="i4"
+                      name="ClientID" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[AccommodationID]"
+                      dataType="i4"
+                      name="AccommodationID" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[IsBooking]"
+                      dataType="bool"
+                      name="IsBooking" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[TypeName]"
+                      codePage="1251"
+                      dataType="str"
+                      length="255"
+                      name="TypeName" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[ArrivalDateBigint]"
+                      dataType="i8"
+                      name="ArrivalDateBigint" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[DepartureDateBigint]"
+                      dataType="i8"
+                      name="DepartureDateBigint" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;]"
+                  isErrorOut="true"
+                  name="Вывод ошибок источника &quot;OLE DB&quot;">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[AccommodationID]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[AccommodationID]"
+                      name="AccommodationID" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ClientID]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ClientID]"
+                      name="ClientID" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[TypeName]"
+                      codePage="1251"
+                      dataType="str"
+                      length="255"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[TypeName]"
+                      name="TypeName" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ArrivalDateBigint]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ArrivalDateBigint]"
+                      name="ArrivalDateBigint" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[DepartureDateBigint]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[DepartureDateBigint]"
+                      name="DepartureDateBigint" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[IsBooking]"
+                      dataType="bool"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[IsBooking]"
+                      name="IsBooking" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Задача потока данных\DimClient"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Источник &quot;OLE DB&quot;;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;7"
+              description="Источник &quot;OLE DB&quot;"
+              name="DimClient"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Время ожидания команды, в секундах. Величина 0 означает неограниченное время ожидания."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Указывает имя объекта базы данных, используемого для открытия набора строк."
+                  name="OpenRowset">[dbo].[DimClient]</property>
+                <property
+                  dataType="System.String"
+                  description="Указывает переменную, содержащую имя объекта базы данных, используемого для открытия набора строк."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Команда SQL для выполнения."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.String"
+                  description="Переменная, содержащая команду SQL для выполнения."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает кодовую страницу столбца, используемую, когда недоступны сведения о кодовой странице из источника данных."
+                  name="DefaultCodePage">1251</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Вызывает безусловное использование значение свойства DefaultCodePage при описании символьных данных."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает используемый режим доступа к базе данных."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="Сопоставления между параметрами в команде SQL и переменными."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Задача потока данных\DimClient.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[MARGARITA-K.HotelDb]"
+                  connectionManagerRefId="Package.ConnectionManagers[MARGARITA-K.HotelDb]"
+                  description="Соединение OLE DB среды выполнения, используемое для доступа к базе данных."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;]"
+                  name="Выход источника &quot;OLE DB&quot;">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[ClientKey]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[ClientKey]"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[ClientKey]"
+                      name="ClientKey"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[Gender]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[Gender]"
+                      length="1"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[Gender]"
+                      name="Gender"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[Age]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[Age]"
+                      length="6"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[Age]"
+                      name="Age"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[MaritalStatus]"
+                      dataType="bool"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[MaritalStatus]"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[MaritalStatus]"
+                      name="MaritalStatus"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[Profession]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[Profession]"
+                      length="100"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[Profession]"
+                      name="Profession"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[ClientAlternateKey]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[ClientAlternateKey]"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[ClientAlternateKey]"
+                      name="ClientAlternateKey"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[ClientKey]"
+                      dataType="i4"
+                      name="ClientKey" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[Gender]"
+                      dataType="wstr"
+                      length="1"
+                      name="Gender" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[Age]"
+                      dataType="wstr"
+                      length="6"
+                      name="Age" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[MaritalStatus]"
+                      dataType="bool"
+                      name="MaritalStatus" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[Profession]"
+                      dataType="wstr"
+                      length="100"
+                      name="Profession" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[ClientAlternateKey]"
+                      dataType="i4"
+                      name="ClientAlternateKey" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;]"
+                  isErrorOut="true"
+                  name="Вывод ошибок источника &quot;OLE DB&quot;">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ClientKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ClientKey]"
+                      name="ClientKey" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[Gender]"
+                      dataType="wstr"
+                      length="1"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[Gender]"
+                      name="Gender" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[Age]"
+                      dataType="wstr"
+                      length="6"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[Age]"
+                      name="Age" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[MaritalStatus]"
+                      dataType="bool"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[MaritalStatus]"
+                      name="MaritalStatus" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[Profession]"
+                      dataType="wstr"
+                      length="100"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[Profession]"
+                      name="Profession" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ClientAlternateKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ClientAlternateKey]"
+                      name="ClientAlternateKey" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Задача потока данных\DimRoomType"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Источник &quot;OLE DB&quot;;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;7"
+              description="Источник &quot;OLE DB&quot;"
+              name="DimRoomType"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Время ожидания команды, в секундах. Величина 0 означает неограниченное время ожидания."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Указывает имя объекта базы данных, используемого для открытия набора строк."
+                  name="OpenRowset">[dbo].[DimRoomType]</property>
+                <property
+                  dataType="System.String"
+                  description="Указывает переменную, содержащую имя объекта базы данных, используемого для открытия набора строк."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Команда SQL для выполнения."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.String"
+                  description="Переменная, содержащая команду SQL для выполнения."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает кодовую страницу столбца, используемую, когда недоступны сведения о кодовой странице из источника данных."
+                  name="DefaultCodePage">1251</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Вызывает безусловное использование значение свойства DefaultCodePage при описании символьных данных."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает используемый режим доступа к базе данных."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="Сопоставления между параметрами в команде SQL и переменными."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Задача потока данных\DimRoomType.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[MARGARITA-K.HotelDb]"
+                  connectionManagerRefId="Package.ConnectionManagers[MARGARITA-K.HotelDb]"
+                  description="Соединение OLE DB среды выполнения, используемое для доступа к базе данных."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;]"
+                  name="Выход источника &quot;OLE DB&quot;">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].Columns[RoomTypeKey]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[RoomTypeKey]"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].Columns[RoomTypeKey]"
+                      name="RoomTypeKey"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].Columns[Name]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[Name]"
+                      length="50"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].Columns[Name]"
+                      name="Name"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].Columns[PriceCategoryKey]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[PriceCategoryKey]"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].Columns[PriceCategoryKey]"
+                      name="PriceCategoryKey"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].Columns[CountOfSeats]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[CountOfSeats]"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].Columns[CountOfSeats]"
+                      name="CountOfSeats"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[RoomTypeKey]"
+                      dataType="i4"
+                      name="RoomTypeKey" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[Name]"
+                      dataType="wstr"
+                      length="50"
+                      name="Name" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[PriceCategoryKey]"
+                      dataType="i4"
+                      name="PriceCategoryKey" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].ExternalColumns[CountOfSeats]"
+                      dataType="i4"
+                      name="CountOfSeats" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;]"
+                  isErrorOut="true"
+                  name="Вывод ошибок источника &quot;OLE DB&quot;">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[RoomTypeKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[RoomTypeKey]"
+                      name="RoomTypeKey" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[Name]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[Name]"
+                      name="Name" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[PriceCategoryKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[PriceCategoryKey]"
+                      name="PriceCategoryKey" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[CountOfSeats]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[CountOfSeats]"
+                      name="CountOfSeats" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Вывод ошибок источника &quot;OLE DB&quot;].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="Назначение &quot;OLE DB&quot;;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;4"
+              description="Назначение &quot;OLE DB&quot;"
+              name="Назначение &quot;OLE DB&quot;"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Время ожидания команды, в секундах. Величина 0 означает неограниченное время ожидания."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Указывает имя объекта базы данных, используемого для открытия набора строк."
+                  name="OpenRowset">[dbo].[FactAccommodation]</property>
+                <property
+                  dataType="System.String"
+                  description="Указывает переменную, содержащую имя объекта базы данных, используемого для открытия набора строк."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Команда SQL для выполнения."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает кодовую страницу столбца, используемую, когда недоступны сведения о кодовой странице из источника данных."
+                  name="DefaultCodePage">1251</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Вызывает безусловное использование значение свойства DefaultCodePage при описании символьных данных."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает используемый режим доступа к базе данных."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Указывает, должны ли значения в столбцах идентификаторов копироваться в назначение. Если свойство имеет значение false, значения в столбцах идентификаторов будут созданы автоматически в месте назначения. Применяется только в том случае, если включена быстрая загрузка."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Указывает, будут ли в назначение вставляться значения NULL для столбцов, содержащих их. Значение false показывает, что если столбец имеет значение NULL, то в назначение будет вставлено его значение по умолчанию. Применяется только в случае, если включена быстрая загрузка."
+                  name="FastLoadKeepNulls">true</property>
+                <property
+                  dataType="System.String"
+                  description="Задает параметры быстрой загрузки. Применяется только в том случае, если включена быстрая загрузка."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Задает, когда выдаются сообщения о фиксации транзакции в ходе вставки данных. Значение 0 задает, что по окончании вставки данных будет выдано одно сообщение о фиксации транзакции. Применяется только в том случае, если включена быстрая загрузка."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[MARGARITA-K.HotelDb]"
+                  connectionManagerRefId="Package.ConnectionManagers[MARGARITA-K.HotelDb]"
+                  description="Соединение OLE DB среды выполнения, используемое для доступа к базе данных."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;]"
+                  errorOrTruncationOperation="Вставить"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Вход назначения &quot;OLE DB&quot;">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].Columns[ClientKey]"
+                      cachedDataType="i4"
+                      cachedName="ClientKey"
+                      externalMetadataColumnId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[ClientKey]"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[ClientKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].Columns[ArrivalDateKey]"
+                      cachedDataType="i8"
+                      cachedName="ArrivalDateKey"
+                      externalMetadataColumnId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[ArrivalDateKey]"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[ArrivalDateKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].Columns[DepartureDateKey]"
+                      cachedDataType="i8"
+                      cachedName="DepartureDateKey"
+                      externalMetadataColumnId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[DepartureDateKey]"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[DepartureDateKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].Columns[IsBooking]"
+                      cachedDataType="bool"
+                      cachedName="IsBooking"
+                      externalMetadataColumnId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[IsBooking]"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[IsBooking]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].Columns[RoomTypeKey]"
+                      cachedDataType="i4"
+                      cachedName="RoomTypeKey"
+                      externalMetadataColumnId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[RoomTypeKey]"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[RoomTypeKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].Columns[Преобразование данных.DaysNumber]"
+                      cachedDataType="i4"
+                      cachedName="Преобразование данных.DaysNumber"
+                      externalMetadataColumnId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[DaysNumber]"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[Преобразование данных.DaysNumber]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[AccommodationKey]"
+                      dataType="i4"
+                      name="AccommodationKey" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[ClientKey]"
+                      dataType="i4"
+                      name="ClientKey" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[ArrivalDateKey]"
+                      dataType="i8"
+                      name="ArrivalDateKey" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[DepartureDateKey]"
+                      dataType="i8"
+                      name="DepartureDateKey" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[IsBooking]"
+                      dataType="bool"
+                      name="IsBooking" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[DaysNumber]"
+                      dataType="i4"
+                      name="DaysNumber" />
+                    <externalMetadataColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;].ExternalColumns[RoomTypeKey]"
+                      dataType="i4"
+                      name="RoomTypeKey" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Outputs[Вывод ошибок назначения &quot;OLE DB&quot;]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Вывод ошибок назначения &quot;OLE DB&quot;"
+                  synchronousInputId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Outputs[Вывод ошибок назначения &quot;OLE DB&quot;].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Outputs[Вывод ошибок назначения &quot;OLE DB&quot;].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Outputs[Вывод ошибок назначения &quot;OLE DB&quot;].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Outputs[Вывод ошибок назначения &quot;OLE DB&quot;].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Задача потока данных\Преобразование данных"
+              componentClassID="Microsoft.DataConvert"
+              contactInfo="Преобразование данных;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;0"
+              description="Преобразование данных"
+              name="Преобразование данных"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Задача потока данных\Преобразование данных.Inputs[Входные данные преобразования данных]"
+                  name="Входные данные преобразования данных">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Преобразование данных.Inputs[Входные данные преобразования данных].Columns[DaysNumber]"
+                      cachedDataType="i8"
+                      cachedName="DaysNumber"
+                      lineageId="Package\Задача потока данных\Производный столбец.Outputs[Выход производного столбца].Columns[DaysNumber]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\Преобразование данных.Outputs[Выходные данные преобразования данных]"
+                  exclusionGroup="1"
+                  name="Выходные данные преобразования данных"
+                  synchronousInputId="Package\Задача потока данных\Преобразование данных.Inputs[Входные данные преобразования данных]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Преобразование данных.Outputs[Выходные данные преобразования данных].Columns[DaysNumber]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Преобразование"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Задача потока данных\Преобразование данных.Outputs[Выходные данные преобразования данных].Columns[DaysNumber]"
+                      name="DaysNumber"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает входной столбец, служащий источником данных для преобразования."
+                          name="SourceInputColumnLineageID">#{Package\Задача потока данных\Производный столбец.Outputs[Выход производного столбца].Columns[DaysNumber]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Указывает, используются ли в столбце более производительные, не зависящие от локалей процедуры синтаксического анализа."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Задача потока данных\Преобразование данных.Outputs[Выходные данные ошибок преобразования данных]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Выходные данные ошибок преобразования данных"
+                  synchronousInputId="Package\Задача потока данных\Преобразование данных.Inputs[Входные данные преобразования данных]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Преобразование данных.Outputs[Выходные данные ошибок преобразования данных].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Преобразование данных.Outputs[Выходные данные ошибок преобразования данных].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\Преобразование данных.Outputs[Выходные данные ошибок преобразования данных].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Преобразование данных.Outputs[Выходные данные ошибок преобразования данных].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Задача потока данных\Производный столбец"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Производный столбец;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;0"
+              description="Создает новые значения столбцов путем применения выражений к входным столбцам преобразования. Создает новые столбцы или перезаписывает существующие. Пример: объединение значений столбцов &quot;first name&quot; и &quot;last name&quot; и создание столбца &quot;full name&quot;."
+              name="Производный столбец"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Задача потока данных\Производный столбец.Inputs[Вход производного столбца]"
+                  description="Ввод преобразования &quot;Производный столбец&quot;"
+                  name="Вход производного столбца">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Производный столбец.Inputs[Вход производного столбца].Columns[ArrivalDateKey]"
+                      cachedDataType="i8"
+                      cachedName="ArrivalDateKey"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[ArrivalDateKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Производный столбец.Inputs[Вход производного столбца].Columns[DepartureDateKey]"
+                      cachedDataType="i8"
+                      cachedName="DepartureDateKey"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[DepartureDateKey]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\Производный столбец.Outputs[Выход производного столбца]"
+                  description="Выход по умолчанию преобразования &quot;Производный столбец&quot;"
+                  exclusionGroup="1"
+                  name="Выход производного столбца"
+                  synchronousInputId="Package\Задача потока данных\Производный столбец.Inputs[Вход производного столбца]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Производный столбец.Outputs[Выход производного столбца].Columns[DaysNumber]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Вычисление"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Задача потока данных\Производный столбец.Outputs[Выход производного столбца].Columns[DaysNumber]"
+                      name="DaysNumber"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Выражение производного столбца"
+                          name="Expression">#{Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[DepartureDateKey]} - #{Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[ArrivalDateKey]}</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Понятное выражение производного столбца"
+                          expressionType="Notify"
+                          name="FriendlyExpression">DepartureDateKey - ArrivalDateKey</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Задача потока данных\Производный столбец.Outputs[Вывод ошибок производного столбца]"
+                  description="Вывод ошибок преобразования &quot;Производный столбец&quot;"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Вывод ошибок производного столбца"
+                  synchronousInputId="Package\Задача потока данных\Производный столбец.Inputs[Вход производного столбца]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Производный столбец.Outputs[Вывод ошибок производного столбца].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Производный столбец.Outputs[Вывод ошибок производного столбца].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Задача потока данных\Производный столбец.Outputs[Вывод ошибок производного столбца].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Производный столбец.Outputs[Вывод ошибок производного столбца].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Задача потока данных\Соединение слиянием"
+              componentClassID="Microsoft.MergeJoin"
+              contactInfo="Соединение слиянием;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;1"
+              description="Объедините два отсортированных потока данных в один с помощью соединения FULL, LEFT или INNER. Это преобразование рекомендуется использовать в случаях, когда потоки данных могут быть отсортированы по источникам."
+              name="Соединение слиянием"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает тип выполняемого соединения."
+                  name="JoinType"
+                  typeConverter="JoinType">2</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает количество столбцов в ключе упорядочивания."
+                  name="NumKeyColumns">1</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Указывает, считаются ли значения NULL эквивалентными значениями."
+                  name="TreatNullsAsEqual">true</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает запрошенное максимальное число буферов на вход перед блокированием."
+                  name="MaxBuffersPerInput">5</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием]"
+                  hasSideEffects="true"
+                  name="Левый вход соединения слиянием">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием].Columns[TypeName]"
+                      cachedCodepage="1251"
+                      cachedDataType="str"
+                      cachedLength="255"
+                      cachedName="TypeName"
+                      cachedSortKeyPosition="1"
+                      lineageId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[TypeName]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием].Columns[ClientKey]"
+                      cachedDataType="i4"
+                      cachedName="ClientKey"
+                      lineageId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[ClientKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием].Columns[AccommodationKey]"
+                      cachedDataType="i4"
+                      cachedName="AccommodationKey"
+                      lineageId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[AccommodationKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием].Columns[ArrivalDateKey]"
+                      cachedDataType="i8"
+                      cachedName="ArrivalDateKey"
+                      lineageId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[ArrivalDateKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием].Columns[DepartureDateKey]"
+                      cachedDataType="i8"
+                      cachedName="DepartureDateKey"
+                      lineageId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[DepartureDateKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием].Columns[IsBooking]"
+                      cachedDataType="bool"
+                      cachedName="IsBooking"
+                      lineageId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[IsBooking]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+                <input
+                  refId="Package\Задача потока данных\Соединение слиянием.Inputs[Правый вход соединения слиянием]"
+                  hasSideEffects="true"
+                  name="Правый вход соединения слиянием">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Inputs[Правый вход соединения слиянием].Columns[Name]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="Name"
+                      cachedSortKeyPosition="1"
+                      lineageId="Package\Задача потока данных\Сортировка 1.Outputs[Выход сортировки].Columns[Name]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Inputs[Правый вход соединения слиянием].Columns[RoomTypeKey]"
+                      cachedDataType="i4"
+                      cachedName="RoomTypeKey"
+                      lineageId="Package\Задача потока данных\Сортировка 1.Outputs[Выход сортировки].Columns[RoomTypeKey]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием]"
+                  name="Выход соединения слиянием">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[ClientKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[ClientKey]"
+                      name="ClientKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Входной столбец, связанный с этим выходным столбцом"
+                          name="InputColumnID">#{Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием].Columns[ClientKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[AccommodationKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[AccommodationKey]"
+                      name="AccommodationKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Входной столбец, связанный с этим выходным столбцом"
+                          name="InputColumnID">#{Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием].Columns[AccommodationKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[ArrivalDateKey]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[ArrivalDateKey]"
+                      name="ArrivalDateKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Входной столбец, связанный с этим выходным столбцом"
+                          name="InputColumnID">#{Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием].Columns[ArrivalDateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[DepartureDateKey]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[DepartureDateKey]"
+                      name="DepartureDateKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Входной столбец, связанный с этим выходным столбцом"
+                          name="InputColumnID">#{Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием].Columns[DepartureDateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[IsBooking]"
+                      dataType="bool"
+                      lineageId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[IsBooking]"
+                      name="IsBooking">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Входной столбец, связанный с этим выходным столбцом"
+                          name="InputColumnID">#{Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием].Columns[IsBooking]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[RoomTypeKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[RoomTypeKey]"
+                      name="RoomTypeKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Входной столбец, связанный с этим выходным столбцом"
+                          name="InputColumnID">#{Package\Задача потока данных\Соединение слиянием.Inputs[Правый вход соединения слиянием].Columns[RoomTypeKey]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Задача потока данных\Соединение слиянием 1"
+              componentClassID="Microsoft.MergeJoin"
+              contactInfo="Соединение слиянием;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;1"
+              description="Объедините два отсортированных потока данных в один с помощью соединения FULL, LEFT или INNER. Это преобразование рекомендуется использовать в случаях, когда потоки данных могут быть отсортированы по источникам."
+              name="Соединение слиянием 1"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает тип выполняемого соединения."
+                  name="JoinType"
+                  typeConverter="JoinType">2</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает количество столбцов в ключе упорядочивания."
+                  name="NumKeyColumns">1</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Указывает, считаются ли значения NULL эквивалентными значениями."
+                  name="TreatNullsAsEqual">true</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает запрошенное максимальное число буферов на вход перед блокированием."
+                  name="MaxBuffersPerInput">5</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием]"
+                  hasSideEffects="true"
+                  name="Левый вход соединения слиянием">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием].Columns[ClientKey]"
+                      cachedDataType="i4"
+                      cachedName="ClientKey"
+                      cachedSortKeyPosition="1"
+                      lineageId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[ClientKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием].Columns[AccommodationKey]"
+                      cachedDataType="i4"
+                      cachedName="AccommodationKey"
+                      lineageId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[AccommodationKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием].Columns[ArrivalDateKey]"
+                      cachedDataType="i8"
+                      cachedName="ArrivalDateKey"
+                      lineageId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[ArrivalDateKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием].Columns[DepartureDateKey]"
+                      cachedDataType="i8"
+                      cachedName="DepartureDateKey"
+                      lineageId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[DepartureDateKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием].Columns[IsBooking]"
+                      cachedDataType="bool"
+                      cachedName="IsBooking"
+                      lineageId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[IsBooking]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием].Columns[RoomTypeKey]"
+                      cachedDataType="i4"
+                      cachedName="RoomTypeKey"
+                      lineageId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[RoomTypeKey]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+                <input
+                  refId="Package\Задача потока данных\Соединение слиянием 1.Inputs[Правый вход соединения слиянием]"
+                  hasSideEffects="true"
+                  name="Правый вход соединения слиянием">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Inputs[Правый вход соединения слиянием].Columns[ClientAlternateKey]"
+                      cachedDataType="i4"
+                      cachedName="ClientAlternateKey"
+                      cachedSortKeyPosition="1"
+                      lineageId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[ClientAlternateKey]" />
+                    <inputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Inputs[Правый вход соединения слиянием].Columns[ClientKey]"
+                      cachedDataType="i4"
+                      cachedName="ClientKey"
+                      lineageId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[ClientKey]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием]"
+                  name="Выход соединения слиянием">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[AccommodationKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[AccommodationKey]"
+                      name="AccommodationKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Входной столбец, связанный с этим выходным столбцом"
+                          name="InputColumnID">#{Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием].Columns[AccommodationKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[ArrivalDateKey]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[ArrivalDateKey]"
+                      name="ArrivalDateKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Входной столбец, связанный с этим выходным столбцом"
+                          name="InputColumnID">#{Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием].Columns[ArrivalDateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[DepartureDateKey]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[DepartureDateKey]"
+                      name="DepartureDateKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Входной столбец, связанный с этим выходным столбцом"
+                          name="InputColumnID">#{Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием].Columns[DepartureDateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[IsBooking]"
+                      dataType="bool"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[IsBooking]"
+                      name="IsBooking">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Входной столбец, связанный с этим выходным столбцом"
+                          name="InputColumnID">#{Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием].Columns[IsBooking]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[ClientKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[ClientKey]"
+                      name="ClientKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Входной столбец, связанный с этим выходным столбцом"
+                          name="InputColumnID">#{Package\Задача потока данных\Соединение слиянием 1.Inputs[Правый вход соединения слиянием].Columns[ClientKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[RoomTypeKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[RoomTypeKey]"
+                      name="RoomTypeKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Входной столбец, связанный с этим выходным столбцом"
+                          name="InputColumnID">#{Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием].Columns[RoomTypeKey]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Задача потока данных\Сортировка"
+              componentClassID="Microsoft.Sort"
+              contactInfo="Сортировка;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;1"
+              description="Сортирует входные данные по возрастанию или убыванию, если выполнить сортировку в источнике нельзя. Пример: сортировка данных продаж по полю &quot;customer id&quot; перед записью в неструктурированный файл и передачей в другой отдел. Примечание. Это преобразование не рекомендуется применять к большим потокам данных."
+              name="Сортировка"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Указывает, удаляет ли преобразование &quot;Сортировка&quot; строки с повторяющимися значениями сортировки."
+                  name="EliminateDuplicates">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает максимальное число потоков, используемых для сортировки."
+                  expressionType="Notify"
+                  name="MaximumThreads">-1</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Задача потока данных\Сортировка.Inputs[Вход сортировки]"
+                  name="Вход сортировки">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка.Inputs[Вход сортировки].Columns[ClientKey]"
+                      cachedDataType="i4"
+                      cachedName="ClientKey"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[ClientKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка.Inputs[Вход сортировки].Columns[AccommodationKey]"
+                      cachedDataType="i4"
+                      cachedName="AccommodationKey"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[AccommodationKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка.Inputs[Вход сортировки].Columns[ArrivalDateKey]"
+                      cachedDataType="i8"
+                      cachedName="ArrivalDateKey"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[ArrivalDateKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка.Inputs[Вход сортировки].Columns[DepartureDateKey]"
+                      cachedDataType="i8"
+                      cachedName="DepartureDateKey"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[DepartureDateKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка.Inputs[Вход сортировки].Columns[IsBooking]"
+                      cachedDataType="bool"
+                      cachedName="IsBooking"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[IsBooking]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка.Inputs[Вход сортировки].Columns[TypeName]"
+                      cachedCodepage="1251"
+                      cachedDataType="str"
+                      cachedLength="255"
+                      cachedName="TypeName"
+                      lineageId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;].Columns[TypeName]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">1</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки]"
+                  isSorted="true"
+                  name="Выход сортировки">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[ClientKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[ClientKey]"
+                      name="ClientKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника "OLE DB"].Columns[ClientKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[AccommodationKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[AccommodationKey]"
+                      name="AccommodationKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника "OLE DB"].Columns[AccommodationKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[ArrivalDateKey]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[ArrivalDateKey]"
+                      name="ArrivalDateKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника "OLE DB"].Columns[ArrivalDateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[DepartureDateKey]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[DepartureDateKey]"
+                      name="DepartureDateKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника "OLE DB"].Columns[DepartureDateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[IsBooking]"
+                      dataType="bool"
+                      lineageId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[IsBooking]"
+                      name="IsBooking">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника "OLE DB"].Columns[IsBooking]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[TypeName]"
+                      codePage="1251"
+                      dataType="str"
+                      length="255"
+                      lineageId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки].Columns[TypeName]"
+                      name="TypeName"
+                      sortKeyPosition="1">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника "OLE DB"].Columns[TypeName]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Задача потока данных\Сортировка 1"
+              componentClassID="Microsoft.Sort"
+              contactInfo="Сортировка;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;1"
+              description="Сортирует входные данные по возрастанию или убыванию, если выполнить сортировку в источнике нельзя. Пример: сортировка данных продаж по полю &quot;customer id&quot; перед записью в неструктурированный файл и передачей в другой отдел. Примечание. Это преобразование не рекомендуется применять к большим потокам данных."
+              name="Сортировка 1"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Указывает, удаляет ли преобразование &quot;Сортировка&quot; строки с повторяющимися значениями сортировки."
+                  name="EliminateDuplicates">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает максимальное число потоков, используемых для сортировки."
+                  expressionType="Notify"
+                  name="MaximumThreads">-1</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Задача потока данных\Сортировка 1.Inputs[Вход сортировки]"
+                  name="Вход сортировки">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 1.Inputs[Вход сортировки].Columns[RoomTypeKey]"
+                      cachedDataType="i4"
+                      cachedName="RoomTypeKey"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].Columns[RoomTypeKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 1.Inputs[Вход сортировки].Columns[Name]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="Name"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].Columns[Name]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">1</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 1.Inputs[Вход сортировки].Columns[PriceCategoryKey]"
+                      cachedDataType="i4"
+                      cachedName="PriceCategoryKey"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].Columns[PriceCategoryKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 1.Inputs[Вход сортировки].Columns[CountOfSeats]"
+                      cachedDataType="i4"
+                      cachedName="CountOfSeats"
+                      lineageId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;].Columns[CountOfSeats]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\Сортировка 1.Outputs[Выход сортировки]"
+                  isSorted="true"
+                  name="Выход сортировки">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 1.Outputs[Выход сортировки].Columns[RoomTypeKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка 1.Outputs[Выход сортировки].Columns[RoomTypeKey]"
+                      name="RoomTypeKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\DimRoomType.Outputs[Выход источника "OLE DB"].Columns[RoomTypeKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 1.Outputs[Выход сортировки].Columns[Name]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Задача потока данных\Сортировка 1.Outputs[Выход сортировки].Columns[Name]"
+                      name="Name"
+                      sortKeyPosition="1">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\DimRoomType.Outputs[Выход источника "OLE DB"].Columns[Name]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 1.Outputs[Выход сортировки].Columns[PriceCategoryKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка 1.Outputs[Выход сортировки].Columns[PriceCategoryKey]"
+                      name="PriceCategoryKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\DimRoomType.Outputs[Выход источника "OLE DB"].Columns[PriceCategoryKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 1.Outputs[Выход сортировки].Columns[CountOfSeats]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка 1.Outputs[Выход сортировки].Columns[CountOfSeats]"
+                      name="CountOfSeats">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\DimRoomType.Outputs[Выход источника "OLE DB"].Columns[CountOfSeats]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Задача потока данных\Сортировка 2"
+              componentClassID="Microsoft.Sort"
+              contactInfo="Сортировка;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;1"
+              description="Сортирует входные данные по возрастанию или убыванию, если выполнить сортировку в источнике нельзя. Пример: сортировка данных продаж по полю &quot;customer id&quot; перед записью в неструктурированный файл и передачей в другой отдел. Примечание. Это преобразование не рекомендуется применять к большим потокам данных."
+              name="Сортировка 2"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Указывает, удаляет ли преобразование &quot;Сортировка&quot; строки с повторяющимися значениями сортировки."
+                  name="EliminateDuplicates">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает максимальное число потоков, используемых для сортировки."
+                  expressionType="Notify"
+                  name="MaximumThreads">-1</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Задача потока данных\Сортировка 2.Inputs[Вход сортировки]"
+                  name="Вход сортировки">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 2.Inputs[Вход сортировки].Columns[ClientKey]"
+                      cachedDataType="i4"
+                      cachedName="ClientKey"
+                      lineageId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[ClientKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">1</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 2.Inputs[Вход сортировки].Columns[AccommodationKey]"
+                      cachedDataType="i4"
+                      cachedName="AccommodationKey"
+                      lineageId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[AccommodationKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 2.Inputs[Вход сортировки].Columns[ArrivalDateKey]"
+                      cachedDataType="i8"
+                      cachedName="ArrivalDateKey"
+                      lineageId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[ArrivalDateKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 2.Inputs[Вход сортировки].Columns[DepartureDateKey]"
+                      cachedDataType="i8"
+                      cachedName="DepartureDateKey"
+                      lineageId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[DepartureDateKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 2.Inputs[Вход сортировки].Columns[IsBooking]"
+                      cachedDataType="bool"
+                      cachedName="IsBooking"
+                      lineageId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[IsBooking]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 2.Inputs[Вход сортировки].Columns[RoomTypeKey]"
+                      cachedDataType="i4"
+                      cachedName="RoomTypeKey"
+                      lineageId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[RoomTypeKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки]"
+                  isSorted="true"
+                  name="Выход сортировки">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[ClientKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[ClientKey]"
+                      name="ClientKey"
+                      sortKeyPosition="1">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[ClientKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[AccommodationKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[AccommodationKey]"
+                      name="AccommodationKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[AccommodationKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[ArrivalDateKey]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[ArrivalDateKey]"
+                      name="ArrivalDateKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[ArrivalDateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[DepartureDateKey]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[DepartureDateKey]"
+                      name="DepartureDateKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[DepartureDateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[IsBooking]"
+                      dataType="bool"
+                      lineageId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[IsBooking]"
+                      name="IsBooking">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[IsBooking]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[RoomTypeKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки].Columns[RoomTypeKey]"
+                      name="RoomTypeKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием].Columns[RoomTypeKey]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Задача потока данных\Сортировка 3"
+              componentClassID="Microsoft.Sort"
+              contactInfo="Сортировка;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;1"
+              description="Сортирует входные данные по возрастанию или убыванию, если выполнить сортировку в источнике нельзя. Пример: сортировка данных продаж по полю &quot;customer id&quot; перед записью в неструктурированный файл и передачей в другой отдел. Примечание. Это преобразование не рекомендуется применять к большим потокам данных."
+              name="Сортировка 3"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Указывает, удаляет ли преобразование &quot;Сортировка&quot; строки с повторяющимися значениями сортировки."
+                  name="EliminateDuplicates">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает максимальное число потоков, используемых для сортировки."
+                  expressionType="Notify"
+                  name="MaximumThreads">-1</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Задача потока данных\Сортировка 3.Inputs[Вход сортировки]"
+                  name="Вход сортировки">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 3.Inputs[Вход сортировки].Columns[ClientKey]"
+                      cachedDataType="i4"
+                      cachedName="ClientKey"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[ClientKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 3.Inputs[Вход сортировки].Columns[Gender]"
+                      cachedDataType="wstr"
+                      cachedLength="1"
+                      cachedName="Gender"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[Gender]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 3.Inputs[Вход сортировки].Columns[Age]"
+                      cachedDataType="wstr"
+                      cachedLength="6"
+                      cachedName="Age"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[Age]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 3.Inputs[Вход сортировки].Columns[MaritalStatus]"
+                      cachedDataType="bool"
+                      cachedName="MaritalStatus"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[MaritalStatus]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 3.Inputs[Вход сортировки].Columns[Profession]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="Profession"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[Profession]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 3.Inputs[Вход сортировки].Columns[ClientAlternateKey]"
+                      cachedDataType="i4"
+                      cachedName="ClientAlternateKey"
+                      lineageId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;].Columns[ClientAlternateKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">1</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки]"
+                  isSorted="true"
+                  name="Выход сортировки">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[ClientKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[ClientKey]"
+                      name="ClientKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\DimClient.Outputs[Выход источника "OLE DB"].Columns[ClientKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[Gender]"
+                      dataType="wstr"
+                      length="1"
+                      lineageId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[Gender]"
+                      name="Gender">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\DimClient.Outputs[Выход источника "OLE DB"].Columns[Gender]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[Age]"
+                      dataType="wstr"
+                      length="6"
+                      lineageId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[Age]"
+                      name="Age">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\DimClient.Outputs[Выход источника "OLE DB"].Columns[Age]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[MaritalStatus]"
+                      dataType="bool"
+                      lineageId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[MaritalStatus]"
+                      name="MaritalStatus">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\DimClient.Outputs[Выход источника "OLE DB"].Columns[MaritalStatus]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[Profession]"
+                      dataType="wstr"
+                      length="100"
+                      lineageId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[Profession]"
+                      name="Profession">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\DimClient.Outputs[Выход источника "OLE DB"].Columns[Profession]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[ClientAlternateKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки].Columns[ClientAlternateKey]"
+                      name="ClientAlternateKey"
+                      sortKeyPosition="1">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\DimClient.Outputs[Выход источника "OLE DB"].Columns[ClientAlternateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Задача потока данных\Сортировка 4"
+              componentClassID="Microsoft.Sort"
+              contactInfo="Сортировка;Корпорация Майкрософт. Microsoft SQL Server. (C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены. http://www.microsoft.com/sql/support;1"
+              description="Сортирует входные данные по возрастанию или убыванию, если выполнить сортировку в источнике нельзя. Пример: сортировка данных продаж по полю &quot;customer id&quot; перед записью в неструктурированный файл и передачей в другой отдел. Примечание. Это преобразование не рекомендуется применять к большим потокам данных."
+              name="Сортировка 4"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Указывает, удаляет ли преобразование &quot;Сортировка&quot; строки с повторяющимися значениями сортировки."
+                  name="EliminateDuplicates">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Указывает максимальное число потоков, используемых для сортировки."
+                  expressionType="Notify"
+                  name="MaximumThreads">-1</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Задача потока данных\Сортировка 4.Inputs[Вход сортировки]"
+                  name="Вход сортировки">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Inputs[Вход сортировки].Columns[AccommodationKey]"
+                      cachedDataType="i4"
+                      cachedName="AccommodationKey"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[AccommodationKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">1</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Inputs[Вход сортировки].Columns[ArrivalDateKey]"
+                      cachedDataType="i8"
+                      cachedName="ArrivalDateKey"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[ArrivalDateKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Inputs[Вход сортировки].Columns[DepartureDateKey]"
+                      cachedDataType="i8"
+                      cachedName="DepartureDateKey"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[DepartureDateKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Inputs[Вход сортировки].Columns[IsBooking]"
+                      cachedDataType="bool"
+                      cachedName="IsBooking"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[IsBooking]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Inputs[Вход сортировки].Columns[ClientKey]"
+                      cachedDataType="i4"
+                      cachedName="ClientKey"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[ClientKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Inputs[Вход сортировки].Columns[RoomTypeKey]"
+                      cachedDataType="i4"
+                      cachedName="RoomTypeKey"
+                      lineageId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[RoomTypeKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Inputs[Вход сортировки].Columns[DaysNumber]"
+                      cachedDataType="i8"
+                      cachedName="DaysNumber"
+                      lineageId="Package\Задача потока данных\Производный столбец.Outputs[Выход производного столбца].Columns[DaysNumber]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Inputs[Вход сортировки].Columns[DaysNumber1]"
+                      cachedDataType="i4"
+                      cachedName="DaysNumber"
+                      lineageId="Package\Задача потока данных\Преобразование данных.Outputs[Выходные данные преобразования данных].Columns[DaysNumber]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Задает параметры сравнения символьных данных."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Указывает порядок сортировки столбца."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки]"
+                  isSorted="true"
+                  name="Выход сортировки">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[AccommodationKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[AccommodationKey]"
+                      name="AccommodationKey"
+                      sortKeyPosition="1">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[AccommodationKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[ArrivalDateKey]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[ArrivalDateKey]"
+                      name="ArrivalDateKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[ArrivalDateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[DepartureDateKey]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[DepartureDateKey]"
+                      name="DepartureDateKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[DepartureDateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[IsBooking]"
+                      dataType="bool"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[IsBooking]"
+                      name="IsBooking">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[IsBooking]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[ClientKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[ClientKey]"
+                      name="ClientKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[ClientKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[RoomTypeKey]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[RoomTypeKey]"
+                      name="RoomTypeKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием].Columns[RoomTypeKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[Производный столбец.DaysNumber]"
+                      dataType="i8"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[Производный столбец.DaysNumber]"
+                      name="Производный столбец.DaysNumber">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Производный столбец.Outputs[Выход производного столбца].Columns[DaysNumber]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[Преобразование данных.DaysNumber]"
+                      dataType="i4"
+                      lineageId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки].Columns[Преобразование данных.DaysNumber]"
+                      name="Преобразование данных.DaysNumber">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Указывает идентификатор журнала обращений и преобразований входного столбца, связанного с этим выходным столбцом."
+                          name="SortColumnId">#{Package\Задача потока данных\Преобразование данных.Outputs[Выходные данные преобразования данных].Columns[DaysNumber]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Задача потока данных.Paths[Выход источника &quot;OLE DB&quot;]"
+              endId="Package\Задача потока данных\Сортировка.Inputs[Вход сортировки]"
+              name="Выход источника &quot;OLE DB&quot;"
+              startId="Package\Задача потока данных\AccommodationInfo.Outputs[Выход источника &quot;OLE DB&quot;]" />
+            <path
+              refId="Package\Задача потока данных.Paths[Выход источника &quot;OLE DB&quot;1]"
+              endId="Package\Задача потока данных\Сортировка 1.Inputs[Вход сортировки]"
+              name="Выход источника &quot;OLE DB&quot;"
+              startId="Package\Задача потока данных\DimRoomType.Outputs[Выход источника &quot;OLE DB&quot;]" />
+            <path
+              refId="Package\Задача потока данных.Paths[Выход источника &quot;OLE DB&quot;2]"
+              endId="Package\Задача потока данных\Сортировка 3.Inputs[Вход сортировки]"
+              name="Выход источника &quot;OLE DB&quot;"
+              startId="Package\Задача потока данных\DimClient.Outputs[Выход источника &quot;OLE DB&quot;]" />
+            <path
+              refId="Package\Задача потока данных.Paths[Выход производного столбца]"
+              endId="Package\Задача потока данных\Преобразование данных.Inputs[Входные данные преобразования данных]"
+              name="Выход производного столбца"
+              startId="Package\Задача потока данных\Производный столбец.Outputs[Выход производного столбца]" />
+            <path
+              refId="Package\Задача потока данных.Paths[Выход соединения слиянием]"
+              endId="Package\Задача потока данных\Сортировка 2.Inputs[Вход сортировки]"
+              name="Выход соединения слиянием"
+              startId="Package\Задача потока данных\Соединение слиянием.Outputs[Выход соединения слиянием]" />
+            <path
+              refId="Package\Задача потока данных.Paths[Выход соединения слиянием1]"
+              endId="Package\Задача потока данных\Производный столбец.Inputs[Вход производного столбца]"
+              name="Выход соединения слиянием"
+              startId="Package\Задача потока данных\Соединение слиянием 1.Outputs[Выход соединения слиянием]" />
+            <path
+              refId="Package\Задача потока данных.Paths[Выход сортировки]"
+              endId="Package\Задача потока данных\Соединение слиянием.Inputs[Левый вход соединения слиянием]"
+              name="Выход сортировки"
+              startId="Package\Задача потока данных\Сортировка.Outputs[Выход сортировки]" />
+            <path
+              refId="Package\Задача потока данных.Paths[Выход сортировки1]"
+              endId="Package\Задача потока данных\Соединение слиянием.Inputs[Правый вход соединения слиянием]"
+              name="Выход сортировки"
+              startId="Package\Задача потока данных\Сортировка 1.Outputs[Выход сортировки]" />
+            <path
+              refId="Package\Задача потока данных.Paths[Выход сортировки2]"
+              endId="Package\Задача потока данных\Соединение слиянием 1.Inputs[Левый вход соединения слиянием]"
+              name="Выход сортировки"
+              startId="Package\Задача потока данных\Сортировка 2.Outputs[Выход сортировки]" />
+            <path
+              refId="Package\Задача потока данных.Paths[Выход сортировки3]"
+              endId="Package\Задача потока данных\Соединение слиянием 1.Inputs[Правый вход соединения слиянием]"
+              name="Выход сортировки"
+              startId="Package\Задача потока данных\Сортировка 3.Outputs[Выход сортировки]" />
+            <path
+              refId="Package\Задача потока данных.Paths[Выход сортировки4]"
+              endId="Package\Задача потока данных\Назначение &quot;OLE DB&quot;.Inputs[Вход назначения &quot;OLE DB&quot;]"
+              name="Выход сортировки"
+              startId="Package\Задача потока данных\Сортировка 4.Outputs[Выход сортировки]" />
+            <path
+              refId="Package\Задача потока данных.Paths[Выходные данные преобразования данных]"
+              endId="Package\Задача потока данных\Сортировка 4.Inputs[Вход сортировки]"
+              name="Выходные данные преобразования данных"
+              startId="Package\Задача потока данных\Преобразование данных.Outputs[Выходные данные преобразования данных]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Удаление данных из таблицы фактов"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Задача &quot;Выполнение SQL&quot;"
+      DTS:DTSID="{B5644EEC-5AD1-4ABC-9ECC-9888AF6E6BFA}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Удаление данных из таблицы фактов"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{90E97D6A-1BE6-4CE5-AB58-AA526B6BECF0}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE FactAccommodation" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Ограничение]"
+      DTS:CreationName=""
+      DTS:DTSID="{81DECB25-27BD-41DC-8629-16FF4279C8AB}"
+      DTS:From="Package\Удаление данных из таблицы фактов"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Ограничение"
+      DTS:To="Package\Задача потока данных" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--В данном разделе CDATA содержатся сведения о макете пакета. В данном разделе содержатся сведения о координатах (x,y), ширине и высоте.-->
+<!--В случае возникновения ошибки при редактировании этого раздела вручную его можно удалить. -->
+<!--Пакет можно загрузить обычным образом, но прежние сведения о макете будут утеряны, и конструктор автоматически перераспределит элементы в области конструктора.-->
+<Objects
+  Version="8">
+  <!--Все приведенные ниже узлы будут содержать свойства, не влияющие на поведение среды выполнения.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="268,42.6666666666667"
+          Id="Package\Удаление данных из таблицы фактов"
+          TopLeft="106.874995222315,56.10526254187" />
+        <NodeLayout
+          Size="193.333333333334,42.6666666666667"
+          Id="Package\Задача потока данных"
+          TopLeft="395.624982314185,146.421051023905" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Ограничение]"
+          TopLeft="240.874995222315,98.7719292085367">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="251.416653758536,47.649121815368"
+              Start="0,0"
+              End="251.416653758536,40.149121815368">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19.824560907684" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,19.824560907684"
+                    Point2="0,23.824560907684"
+                    Point3="4,23.824560907684" />
+                  <mssgle:LineSegment
+                    End="247.416653758536,23.824560907684" />
+                  <mssgle:CubicBezierSegment
+                    Point1="247.416653758536,23.824560907684"
+                    Point2="251.416653758536,23.824560907684"
+                    Point3="251.416653758536,27.824560907684" />
+                  <mssgle:LineSegment
+                    End="251.416653758536,40.149121815368" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Задача потока данных">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="174.666666666667,42.6666666666667"
+          Id="Package\Задача потока данных\AccommodationInfo"
+          TopLeft="98.1249956134708,23.263157639312" />
+        <NodeLayout
+          Size="139.333333333334,42.6666666666667"
+          Id="Package\Задача потока данных\Сортировка"
+          TopLeft="126.874994328246,113.578946121347" />
+        <EdgeLayout
+          Id="Package\Задача потока данных.Paths[Выход источника &quot;OLE DB&quot;]"
+          TopLeft="185.458328946804,65.9298243059786">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="11.0833320481082,47.649121815368"
+              Start="0,0"
+              End="11.0833320481082,40.149121815368">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19.824560907684" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,19.824560907684"
+                    Point2="0,23.824560907684"
+                    Point3="4,23.824560907684" />
+                  <mssgle:LineSegment
+                    End="7.08333204810822,23.824560907684" />
+                  <mssgle:CubicBezierSegment
+                    Point1="7.08333204810822,23.824560907684"
+                    Point2="11.0833320481082,23.824560907684"
+                    Point3="11.0833320481082,27.824560907684" />
+                  <mssgle:LineSegment
+                    End="11.0833320481082,40.149121815368" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="150.666666666667,42.6666666666667"
+          Id="Package\Задача потока данных\DimRoomType"
+          TopLeft="338.749984856696,36.9473680153778" />
+        <NodeLayout
+          Size="148,42.6666666666667"
+          Id="Package\Задача потока данных\Сортировка 1"
+          TopLeft="324.87498706393,110.763157068362" />
+        <EdgeLayout
+          Id="Package\Задача потока данных.Paths[Выход источника &quot;OLE DB&quot;1]"
+          TopLeft="414.083318190029,79.6140346820445">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-15.2083311260989,31.1491223863178"
+              Start="0,0"
+              End="-15.2083311260989,23.6491223863178">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,11.5745611931589" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,11.5745611931589"
+                    Point2="0,15.5745611931589"
+                    Point3="-4,15.5745611931589" />
+                  <mssgle:LineSegment
+                    End="-11.2083311260989,15.5745611931589" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-11.2083311260989,15.5745611931589"
+                    Point2="-15.2083311260989,15.5745611931589"
+                    Point3="-15.2083311260989,19.5745611931589" />
+                  <mssgle:LineSegment
+                    End="-15.2083311260989,23.6491223863178" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="192,42.6666666666667"
+          Id="Package\Задача потока данных\Соединение слиянием"
+          TopLeft="209.249993573875,201.657893241855" />
+        <EdgeLayout
+          Id="Package\Задача потока данных.Paths[Выход сортировки]"
+          TopLeft="196.541660994912,156.245612788013">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="78.0416659122956,45.412280453842"
+              Start="0,0"
+              End="78.0416659122956,37.912280453842">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.0221834105506" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.0221834105506"
+                    Point2="0,27.0221834105506"
+                    Point3="4,27.0221834105506" />
+                  <mssgle:LineSegment
+                    End="74.0416659122956,27.0221834105506" />
+                  <mssgle:CubicBezierSegment
+                    Point1="74.0416659122956,27.0221834105506"
+                    Point2="78.0416659122956,27.0221834105506"
+                    Point3="78.0416659122956,31.0221834105506" />
+                  <mssgle:LineSegment
+                    End="78.0416659122956,37.912280453842" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Задача потока данных.Paths[Выход сортировки1]"
+          TopLeft="398.87498706393,153.429823735029">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-62.9583268233887,48.2280695068264"
+              Start="0,0"
+              End="-62.9583268233887,40.7280695068264">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6976942519959" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6976942519959"
+                    Point2="0,28.6976942519959"
+                    Point3="-4,28.6976942519959" />
+                  <mssgle:LineSegment
+                    End="-58.9583268233887,28.6976942519959" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-58.9583268233887,28.6976942519959"
+                    Point2="-62.9583268233887,28.6976942519959"
+                    Point3="-62.9583268233887,32.6976942519959" />
+                  <mssgle:LineSegment
+                    End="-62.9583268233887,40.7280695068264" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="190.666666666667,42.6666666666667"
+          Id="Package\Задача потока данных\Производный столбец"
+          TopLeft="614.45830681858,370.350873617034" />
+        <NodeLayout
+          Size="204,42.6666666666667"
+          Id="Package\Задача потока данных\Преобразование данных"
+          TopLeft="483.12497840263,455.526311995663" />
+        <EdgeLayout
+          Id="Package\Задача потока данных.Paths[Выход производного столбца]"
+          TopLeft="709.791640151914,413.017540283701">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-124.666661749284,42.5087717119623"
+              Start="0,0"
+              End="-124.666661749284,35.0087717119623">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,17.2543858559811" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,17.2543858559811"
+                    Point2="0,21.2543858559811"
+                    Point3="-4,21.2543858559811" />
+                  <mssgle:LineSegment
+                    End="-120.666661749284,21.2543858559811" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-120.666661749284,21.2543858559811"
+                    Point2="-124.666661749284,21.2543858559811"
+                    Point3="-124.666661749284,25.2543858559811" />
+                  <mssgle:LineSegment
+                    End="-124.666661749284,35.0087717119623" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="189.333333333334,42.6666666666667"
+          Id="Package\Задача потока данных\Назначение &quot;OLE DB&quot;"
+          TopLeft="91.2499959208073,505.333329336685" />
+        <NodeLayout
+          Size="148,42.6666666666667"
+          Id="Package\Задача потока данных\Сортировка 2"
+          TopLeft="226.249989885837,276.666664953818" />
+        <NodeLayout
+          Size="126.666666666667,42.6666666666667"
+          Id="Package\Задача потока данных\DimClient"
+          TopLeft="461.249979380519,202.087718404259" />
+        <NodeLayout
+          Size="148,42.6666666666667"
+          Id="Package\Задача потока данных\Сортировка 3"
+          TopLeft="467.499979101122,279.12280568032" />
+        <NodeLayout
+          Size="200.666666666667,42.6666666666667"
+          Id="Package\Задача потока данных\Соединение слиянием 1"
+          TopLeft="328.12498533167,351.649120673469" />
+        <EdgeLayout
+          Id="Package\Задача потока данных.Paths[Выход соединения слиянием]"
+          TopLeft="302.749991729856,244.324559908522">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,32.3421050452956"
+              Start="0,0"
+              End="0,24.8421050452956">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.8421050452956" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Задача потока данных.Paths[Выход источника &quot;OLE DB&quot;2]"
+          TopLeft="524.583312713852,244.754385070925">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="16.9166663872699,34.3684206093943"
+              Start="0,0"
+              End="16.9166663872699,26.8684206093943">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,13.1842103046971" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,13.1842103046971"
+                    Point2="0,17.1842103046971"
+                    Point3="4,17.1842103046971" />
+                  <mssgle:LineSegment
+                    End="12.9166663872699,17.1842103046971" />
+                  <mssgle:CubicBezierSegment
+                    Point1="12.9166663872699,17.1842103046971"
+                    Point2="16.9166663872699,17.1842103046971"
+                    Point3="16.9166663872699,21.1842103046971" />
+                  <mssgle:LineSegment
+                    End="16.9166663872699,26.8684206093943" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Задача потока данных.Paths[Выход сортировки2]"
+          TopLeft="300.249989885837,319.333331620484">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="128.208328779166,32.3157890529843"
+              Start="0,0"
+              End="128.208328779166,24.8157890529843">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,12.1578945264922" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,12.1578945264922"
+                    Point2="0,16.1578945264922"
+                    Point3="4,16.1578945264922" />
+                  <mssgle:LineSegment
+                    End="124.208328779166,16.1578945264922" />
+                  <mssgle:CubicBezierSegment
+                    Point1="124.208328779166,16.1578945264922"
+                    Point2="128.208328779166,16.1578945264922"
+                    Point3="128.208328779166,20.1578945264922" />
+                  <mssgle:LineSegment
+                    End="128.208328779166,24.8157890529843" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Задача потока данных.Paths[Выход сортировки3]"
+          TopLeft="541.499979101122,321.789472346986">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-80.9305493250079,29.8596483264824"
+              Start="0,0"
+              End="-80.9305493250079,22.3596483264824">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,13.7740688456253" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,13.7740688456253"
+                    Point2="0,17.7740688456253"
+                    Point3="-4,17.7740688456253" />
+                  <mssgle:LineSegment
+                    End="-76.9305493250079,17.7740688456253" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-76.9305493250079,17.7740688456253"
+                    Point2="-80.9305493250079,17.7740688456253"
+                    Point3="-80.9305493250079,21.7740688456253" />
+                  <mssgle:LineSegment
+                    End="-80.9305493250079,22.3596483264824" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Задача потока данных.Paths[Выход соединения слиянием1]"
+          TopLeft="528.791651998337,372.982454006802">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="85.6666548202439,18.7017529435656"
+              Start="0,0"
+              End="78.1666548202439,18.7017529435656">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="38.833327410122,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="38.833327410122,0"
+                    Point2="42.833327410122,0"
+                    Point3="42.833327410122,4" />
+                  <mssgle:LineSegment
+                    End="42.833327410122,14.7017529435656" />
+                  <mssgle:CubicBezierSegment
+                    Point1="42.833327410122,14.7017529435656"
+                    Point2="42.833327410122,18.7017529435656"
+                    Point3="46.833327410122,18.7017529435656" />
+                  <mssgle:LineSegment
+                    End="78.1666548202439,18.7017529435656" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="148,42.6666666666667"
+          Id="Package\Задача потока данных\Сортировка 4"
+          TopLeft="322.291653898235,509.929823164079" />
+        <EdgeLayout
+          Id="Package\Задача потока данных.Paths[Выходные данные преобразования данных]"
+          TopLeft="483.12497840263,476.859645328996">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-86.8333245043953,33.0701778350828"
+              Start="0,0"
+              End="-86.8333245043953,25.5701778350828">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-82.8333245043953,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-82.8333245043953,0"
+                    Point2="-86.8333245043953,0"
+                    Point3="-86.8333245043953,4" />
+                  <mssgle:LineSegment
+                    End="-86.8333245043953,25.5701778350828" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Задача потока данных.Paths[Выход сортировки4]"
+          TopLeft="322.291653898235,528.964909583716">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-41.708324644094,0"
+              Start="0,0"
+              End="-34.208324644094,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-34.208324644094,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Задача потока данных\AccommodationInfo">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Задача потока данных\DimRoomType">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Задача потока данных\Назначение &quot;OLE DB&quot;">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Задача потока данных\DimClient">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
